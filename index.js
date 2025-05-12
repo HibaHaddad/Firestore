@@ -34,7 +34,19 @@ app.post("/addData", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("API ESP32 OK");
+ const lat = req.query.lat;
+  const lng = req.query.lng;
+
+  if (lat && lng) {
+    await db.collection('positions').add({
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng),
+      timestamp: Date.now()
+    });
+    res.send('✅ Données ajoutées à Firestore');
+  } else {
+    res.send('API ESP32 OK');
+  }
 });
 
 const PORT = process.env.PORT || 3000;
